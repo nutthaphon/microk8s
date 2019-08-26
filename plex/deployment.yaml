@@ -1,0 +1,192 @@
+apiVersion: apps/v1
+kind: Deployment
+
+# It is common for all kind.
+metadata:
+  # Annotations is an unstructured key value map stored with a resource that may be set by external tools to store and retrieve arbitrary metadata.
+  #annotations:
+  #  imageregistry: "https://hub.docker.com/"
+  
+  # Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services.
+  labels:
+    environment: entertainment
+    app: plex
+  
+  # Name must be unique within a namespace.
+  name: plex-probook-deployment
+  
+  # Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
+  namespace: default
+  
+spec:
+  # Minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available.
+  minReadySeconds: 0
+  
+  # Indicates that the deployment is paused.
+  paused: false
+  
+  # The maximum time in seconds for a deployment to make progress before it is considered to be failed.
+  progressDeadlineSeconds: 600
+  
+  # Number of desired pods. 
+  replicas: 1
+
+  # The number of old ReplicaSets to retain to allow rollback. 
+  revisionHistoryLimit: 10
+  
+  # selector is a label query over pods that should match the replica count. It must match the pod template's labels.
+  selector:
+    matchLabels:
+      app : plex
+
+  # Because of It is recommended that users create Pods only through a Controller, and not directly. 
+  # See Controllers: Deployment, Job, or StatefulSet.
+  # Template describes the pods that will be created.
+  template:
+    metadata:
+      labels:
+        environment: entertainment
+        app: plex
+  
+      # Name must be unique within a namespace.
+      name: plex-probook-pod
+  
+      # Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
+      namespace: default
+    
+    spec:
+
+      # List of containers belonging to the pod. Containers cannot currently be added or removed. There must be at least one container in a Pod. Cannot be updated.
+      containers:
+          # Name of the container specified as a DNS_LABEL. Each container in a pod must have a unique name (DNS_LABEL). Cannot be updated.
+        - name: plexserver
+          # List of environment variables to set in the container. Cannot be updated.
+          env:
+            - name: TZ
+              value: Asia/Bangkok
+            - name: PLEX_CLAIM
+              value: claim-CCPetyAdy364tZuCCkyw
+            - name: ADVERTISE_IP
+              value: http://127.0.0.1:32400/
+            
+          # Docker image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
+          image: plexinc/pms-docker:latest
+          
+          # Image pull policy. One of Always, Never, IfNotPresent. Defaults to Always if :latest tag is specified, or IfNotPresent otherwise. Cannot be updated. More info: https://kubernetes.io/docs/concepts/containers/images#updating-images
+          imagePullPolicy: Always
+
+          # List of ports to expose from the container. Exposing a port here gives the system additional information about the network connections a container uses, but is primarily informational. Not specifying a port here DOES NOT prevent that port from being exposed. Any port which is listening on the default "0.0.0.0" address inside a container will be accessible from the network. Cannot be updated.
+          ports:
+            # Number of port to expose on the pod's IP address. This must be a valid port number, 0 < x < 65536.
+            - containerPort: 32400  
+              # Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
+              hostPort: 32400
+              # If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. Name for the port that can be referred to by services.
+              name: media-server
+              # Protocol for port. Must be UDP, TCP, or SCTP. Defaults to "TCP".
+              protocol: TCP
+
+            - containerPort: 3005
+              hostPort: 3005
+              name: home-theater
+              protocol: TCP
+
+            - containerPort: 8324
+              hostPort: 8324
+              name: roku
+              protocol: TCP
+
+            - containerPort: 32469
+              hostPort: 32469
+              name: dlna-server-tcp
+              protocol: TCP
+
+            - containerPort: 1900
+              hostPort: 1900
+              name: dlna-server-udp
+              protocol: UDP
+
+            - containerPort: 32410
+              hostPort: 32410
+              name: gdm-net-1
+              protocol: UDP
+
+            - containerPort: 32412
+              hostPort: 32412
+              name: gdm-net-2
+              protocol: UDP
+
+            - containerPort: 32413
+              hostPort: 32413
+              name: gdm-net-3
+              protocol: UDP
+
+            - containerPort: 32414
+              hostPort: 32414
+              name: gdm-net-4
+              protocol: UDP
+
+          # Compute Resources required by this container. Cannot be updated. 
+          resources:
+            # Limits describes the maximum amount of compute resources allowed. 
+            limits:
+              memory: "512M"
+              # The expression 0.1 is equivalent to the expression 100m, which can be read as “one hundred millicpu”
+              cpu: "2"
+            # Requests describes the minimum amount of compute resources required. If Requests is omitted for a container, it defaults to Limits if that is explicitly specified, otherwise to an implementation-defined value.
+            requests:
+              memory: "128M"
+              cpu: "500m"
+          # Security options the pod should run with. More info: https://kubernetes.io/docs/concepts/policy/security-context/
+          # securityContext:
+              
+          # Whether this container should allocate a buffer for stdin in the container runtime. If this is not set, reads from stdin in the container will always result in EOF. Default is false.
+          stdin: false
+
+          # Whether the container runtime should close the stdin channel after it has been opened by a single attach. When stdin is true the stdin stream will remain open across multiple attach sessions. If stdinOnce is set to true, stdin is opened on container start, 
+          # is empty until the first client attaches to stdin, and then remains open and accepts data until the client disconnects, at which time stdin is closed and remains closed until the container is restarted. If this flag is false, 
+          # a container processes that reads from stdin will never receive an EOF. Default is false
+          stdinOnce: false
+
+          # Whether this container should allocate a TTY for itself, also requires 'stdin' to be true. Default is false.
+          tty: false
+
+          # Pod volumes to mount into the container's filesystem. Cannot be updated.
+          volumeMounts:
+            # Path within the container at which the volume should be mounted. Must not contain ':'.
+          - mountPath: /config
+
+            # This must match the Name of a Volume.
+            name: plex-config-dir
+
+            # Mounted read-only if true, read-write otherwise (false or unspecified). Defaults to false.
+            readOnly: false
+
+          - mountPath: /transcode
+            name: plex-transcode-dir
+            readOnly: false
+
+          - mountPath: /data1
+            name: torrent-finished-dir
+            readOnly: false
+
+      # Restart policy for all containers within the pod. One of Always, OnFailure, Never. Default to Always. 
+      restartPolicy: Always
+
+      # List of volumes that can be mounted by containers belonging to the pod.
+      volumes:
+      - name: plex-config-dir
+        hostPath:
+          path: /home/nutt/K8s/plex/config
+          type: Directory
+
+      - name: plex-transcode-dir
+        hostPath:
+          path: /home/nutt/K8s/plex/transcode
+          type: Directory
+
+      - name: torrent-finished-dir
+        hostPath:
+          path: /home/nutt/Downloads/Torrents/Finished
+          type: Directory
+
