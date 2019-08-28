@@ -65,9 +65,9 @@ spec:
             - name: TZ
               value: Asia/Bangkok
             - name: PLEX_CLAIM
-              value: claim-w_qSrJqjv-cKy8jvxQoK
+              value: claim-3uzGZjn1GswDgXtg5q4x
             - name: ADVERTISE_IP
-              value: http://10.80.1.222:32400/
+              value: http://192.168.1.115:32400/
             
           # Docker image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
           image: plexinc/pms-docker:latest
@@ -167,7 +167,7 @@ spec:
             readOnly: false
 
           - mountPath: /data1
-            name: home-video-dir
+            name: plex-video-dir
             readOnly: false
 
       # Restart policy for all containers within the pod. One of Always, OnFailure, Never. Default to Always. 
@@ -177,16 +177,16 @@ spec:
       volumes:
       - name: plex-config-dir
         hostPath:
-          path: /home/ossadmin/microk8s/plex/config
+          path: /home/nutt/K8s/plex/config
           type: Directory
 
       - name: plex-transcode-dir
         hostPath:
-          path: /home/ossadmin/microk8s/plex/transcode
+          path: /home/nutt/K8s/plex/transcode
           type: Directory
 
-      - name: home-video-dir
+      - name: plex-video-dir
         hostPath:
-          path: /home/ossadmin/Videos
+          path: /home/nutt/Downloads/Torrents/Finished
           type: Directory
 
