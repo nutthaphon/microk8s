@@ -13,7 +13,7 @@ metadata:
     app: plex
   
   # Name must be unique within a namespace.
-  name: plex-probook-deployment
+  name: plex-probook
   
   # Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
   namespace: default
@@ -49,7 +49,7 @@ spec:
         app: plex
   
       # Name must be unique within a namespace.
-      name: plex-probook-pod
+      name: plex-probook
   
       # Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
       namespace: default
@@ -65,9 +65,9 @@ spec:
             - name: TZ
               value: Asia/Bangkok
             - name: PLEX_CLAIM
-              value: claim-CCPetyAdy364tZuCCkyw
+              value: claim-w_qSrJqjv-cKy8jvxQoK
             - name: ADVERTISE_IP
-              value: http://127.0.0.1:32400/
+              value: http://10.80.1.222:32400/
             
           # Docker image name. More info: https://kubernetes.io/docs/concepts/containers/images This field is optional to allow higher level config management to default or override container images in workload controllers like Deployments and StatefulSets.
           image: plexinc/pms-docker:latest
@@ -167,7 +167,7 @@ spec:
             readOnly: false
 
           - mountPath: /data1
-            name: torrent-finished-dir
+            name: home-video-dir
             readOnly: false
 
       # Restart policy for all containers within the pod. One of Always, OnFailure, Never. Default to Always. 
@@ -177,16 +177,16 @@ spec:
       volumes:
       - name: plex-config-dir
         hostPath:
-          path: /home/nutt/K8s/plex/config
+          path: /home/ossadmin/microk8s/plex/config
           type: Directory
 
       - name: plex-transcode-dir
         hostPath:
-          path: /home/nutt/K8s/plex/transcode
+          path: /home/ossadmin/microk8s/plex/transcode
           type: Directory
 
-      - name: torrent-finished-dir
+      - name: home-video-dir
         hostPath:
-          path: /home/nutt/Downloads/Torrents/Finished
+          path: /home/ossadmin/Videos
           type: Directory
 
