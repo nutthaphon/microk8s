@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: bigdata
+  name: bigdata-poc
   labels:
-    name: bigdata
+    name: bigdata-poc
 

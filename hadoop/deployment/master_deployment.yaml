@@ -9,14 +9,14 @@ metadata:
   
   # Map of string keys and values that can be used to organize and categorize (scope and select) objects. May match selectors of replication controllers and services.
   labels:
-    environment: poc
+    role: master
     app: hadoop
   
   # Name must be unique within a namespace.
-  name: hadoop-deploy-poc
+  name: hadoop-master-pod
   
   # Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
-  namespace: bigdata
+  namespace: bigdata-poc
   
 spec:
   # Minimum number of seconds for which a newly created pod should be ready without any of its container crashing, for it to be considered available.
@@ -46,10 +46,11 @@ spec:
     metadata:
       labels:
         environment: poc
+        role: master
         app: hadoop
   
       # Name must be unique within a namespace.
-      name: hadoop-poc
+      name: hadoop-master-poc
   
       # Namespace defines the space within each name must be unique. An empty namespace is equivalent to the "default" namespace, but "default" is the canonical representation.
       namespace: bigdata
@@ -76,7 +77,7 @@ spec:
             - containerPort: 22  
               # Number of port to expose on the host. If specified, this must be a valid port number, 0 < x < 65536. 
               # If HostNetwork is specified, this must match ContainerPort. Most containers do not need this.
-              hostPort: 22
+              hostPort: 2220
               # If specified, this must be an IANA_SVC_NAME and unique within the pod. Each named port in a pod must have a unique name. 
               # Name for the port that can be referred to by services.
               name: ssh
@@ -153,6 +154,14 @@ spec:
             name: script-dir
             readOnly: false
 
+      # Specifies the hostname of the Pod If not specified, the pod's hostname will be set to a system-defined value.
+      hostname: hdmaster
+
+      # If specified, the fully qualified Pod hostname will be "<hostname>.<subdomain>.<pod namespace>.svc.<cluster domain>". If not specified, the pod will not have a domainname at all.
+      # fully qualified domain name (FQDN) “foo.bar.my-namespace.svc.cluster-domain.example”
+      # hdmaster.hdfs.com.bigdata.svc.
+      subdomain: hdfs
+
       # Restart policy for all containers within the pod. One of Always, OnFailure, Never. Default to Always. 
       restartPolicy: Always
 
@@ -160,10 +169,10 @@ spec:
       volumes:
       - name: java-home-dir
         hostPath:
-          path: /home/ossadmin/microk8s/java/jdk1.8.0_211
+          path: /home/nutt/K8s/java/jdk1.8.0_221
           type: Directory
           
       - name: script-dir
         hostPath:
-          path: /home/ossadmin/microk8s/script
+          path: /home/nutt/K8s/script
           type: Directory

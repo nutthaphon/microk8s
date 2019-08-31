@@ -1,15 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    environment: entertainment
-    app: plex
-  name: plex-service
+  name: ""
 spec:
   # clusterIP is the IP address of the service and is usually assigned randomly by the master. If an address is specified manually and is not in use by others, 
   # it will be allocated to the service; otherwise, creation of the service will fail. This field can not be changed through updates. Valid values are "None", empty string (""), 
   # or a valid IP address. "None" can be specified for headless services when proxying is not required. Only applies to types ClusterIP, NodePort, and LoadBalancer. Ignored if type is ExternalName. 
-  #clusterIP: 
+  #clusterIP:
 
   #externalIPs is a list of IP addresses for which nodes in the cluster will also accept traffic for this service. These IPs are not managed by Kubernetes. 
   #The user is responsible for ensuring that traffic arrives at a node with this IP. A common example is external load-balancers that are not part of the Kubernetes system.
@@ -38,49 +35,23 @@ spec:
   # The list of ports that are exposed by this service. 
   ports:
     # The name of this port within the service. This must be a DNS_LABEL. All ports within a ServiceSpec must have unique names. This maps to the 'Name' field in EndpointPort objects. Optional if only one ServicePort is defined on this service.
-  - name: media-server
+  - name:
     # The port on each node on which this service is exposed when type=NodePort or LoadBalancer. Usually assigned by the system. If specified, it will be allocated to the service if unused or else creation of the service will fail. Default is to auto-allocate a port if the ServiceType of this Service requires one.
-    nodePort: 32400
+    nodePort:
     # The port that will be exposed by this service.
-    port: 32400
+    port:
     # The IP protocol for this port. Supports "TCP", "UDP", and "SCTP". Default is TCP.
-    protocol: TCP
+    protocol:
     # Number or name of the port to access on the pods targeted by the service. Number must be in the range 1 to 65535. Name must be an IANA_SVC_NAME. 
     # If this is a string, it will be looked up as a named port in the target Pod's container ports. If this is not specified, the value of the 'port' field is used (an identity map). This field is ignored for services with clusterIP=None, and should be omitted or set equal to the 'port' field. 
-    #targetPort:
-  # - name: home-theater
-  #   nodePort: 3005
-  #   port: 3005
-  #   protocol: TCP
-  # - name: roku
-  #   nodePort: 8324
-  #   port: 8324
-  #   protocol: TCP
-  # - name: dlna-server-tcp
-  #   nodePort: 32469
-  #   port: 32469   
-  #   protocol: TCP
-  # - name: dlna-server-udp
-  #   nodePort: 1900
-  #   port: 1900
-  #   protocol: UDP
-  # - name: gdm-net-1
-  #   nodePort: 32410
-  #   port : 32410
-  #   protocol: UDP
-  # - name: gdm-net-2
-  #   nodePort: 32412
-  #   port: 32412
-  #   protocol: UDP
-  # - name: gdm-net-3
-  #   nodePort: 32413
-  #   port: 32413
-  #   protocol: UDP
-  # - name: gdm-net-4
-  #   nodePort: 32414
-  #   port: 32414
-  #   protocol: UDP
+    targetPort:
 
+  - name:
+    nodePort:
+    port:
+    protocol:
+    targetPort:
+  
   # publishNotReadyAddresses, when set to true, indicates that DNS implementations must publish the notReadyAddresses of subsets for the Endpoints associated with the Service. 
   # The default value is false. The primary use case for setting this field is to use a StatefulSet's Headless Service to propagate SRV records for its Pods without respect to their readiness for purpose of peer discovery.
   #publishNotReadyAddresses: 
@@ -90,8 +61,7 @@ spec:
   # which Kubernetes will not modify. Only applies to types ClusterIP, NodePort, and LoadBalancer. 
   # Ignored if type is ExternalName.
   selector:
-    environment: entertainment
-    app: plex
+    app: ""
   
   # Supports "ClientIP" and "None". Used to maintain session affinity. Enable client IP based session affinity. Must be ClientIP or None. Defaults to None.
   #sessionAffinity:
@@ -107,4 +77,5 @@ spec:
   # "LoadBalancer" builds on NodePort and creates an external load-balancer (if supported in the current cloud) which routes to the clusterIP.
   type: NodePort
 
+status:
   
